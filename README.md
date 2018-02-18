@@ -1,2 +1,7 @@
 # HackTheWorld
-An easy to use Script for generating Payloads that Bypasses Antivirus
+An Python Script For Generating Payloads that Bypasses All Antivirus so far .
+
+# Requirements
+Metasploit Framework
+Wine
+Mingw-w64 Compiler
