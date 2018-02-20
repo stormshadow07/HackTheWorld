@@ -174,7 +174,7 @@ if __name__ == '__main__':
 	
 	man='wine mt.exe -manifest template.exe.manifest -outputresource:'+exe_name+'.exe;#1 '
 	
-	bool =input(color('[*]Do you want to add Manifest [ 1 or 0 ]?'))
+	bool =input(color('[*]Do you want to add Manifest (Generally Bypasses Windows Defender)[ 1 or 0 ]?'))
 	# Display Results
 	print color("\n==================================== RESULT ====================================\n")
 	if bool:
