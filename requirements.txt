@@ -1,0 +1,2 @@
+pycryptodome==3.9.7
+termcolor==1.1.0
