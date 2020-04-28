@@ -9,9 +9,6 @@ import os
 from termcolor import colored
 
 
-shellcode_output = "./result/test.raw"
-
-
 def banner():
 	return """
   _    _            _      _______ _           __          __        _     _ 
@@ -133,6 +130,7 @@ if __name__ == "__main__":
 	os.system(raw_payload)
 
 	try:
+		shellcode_output = "./result/test.raw"
 		with open(shellcode_output, encoding="utf-8", errors="ignore") as shellcode_output_handle:
 			shellcode_bytes = bytearray(shellcode_output_handle.read(), "utf8")
 			print(color(f"[*] Shellcode file [{shellcode_output}] successfully loaded"))
