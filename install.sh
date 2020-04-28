@@ -1,60 +1,49 @@
 #!/bin/bash
 
+arch=$(head -n1 /etc/issue | cut -d' ' -f1)
 
-arch="$(uname -m)"
-wine32=/usr/lib/wine/wine
-#echo $arch
-BOLD="\033[01;01m"     # Highlight
-RED="\033[01;31m"      # Issues/Errors
-GREEN="\033[01;32m"    # Success
-YELLOW="\033[01;33m"   # Warnings/Information
-RESET="\033[00m"
-echo ""
-if [  -e /usr/bin/msfvenom ]; then
-    echo -e $GREEN "[ ✔ ] Msfvenom ................[ found ]"
+if [ -e /usr/bin/msfvenom ]; then
+    printf "[] Msfvenom is already installed.\n"
+elif [ "$arch" = "Kali" ]; then
+	printf "[!] Msfvenom is not installed but this is Kali Linux.\n"
+	printf "[*] The Metasploit framework is available as a package via:\n"
+	printf "[*] apt install metasploit-framework\n"
 else 
-	echo -e $RED "[ X ] Msfvenom -> not found "
-	echo -e "\n [*] ${YELLOW} Installing Metasploit-framework ${RESET}\n"
-	sudo apt-get install metasploit-framework 
-	echo -e $GREEN " Start the install.sh File  Again"
-	exit 0
+	printf "[!] Msfvenom is not installed at /usr/bin/msfvenom.\n"
+	printf "[*] If it's already installed and on your path, ignore this warning.\n"
+	printf "[*] Otherwise, you need to install the Metasploit framework (https://github.com/rapid7/metasploit-framework/wiki/Nightly-Installers).\n"
+fi
+
+if [ -e /usr/bin/wine ]; then
+    printf "[] Wine is already installed.\n"
+else 
+	printf "[!] Wine is not installed.\n"
+	printf "[*] Updating the apt cache.\n"
+    sudo apt-get -qq update || exit 1
 	
-fi
-
-if [  -e /usr/bin/wine ]; then
-    echo -e $GREEN "[ ✔ ] Wine ....................[ found ]"
-else 
-	echo -e $RED "[ X ] Wine -> not found "
-      	sudo apt-get -qq update
-	echo -e "\n [*] ${YELLOW}Adding x86 architecture to x86_64 system for Wine${RESET}\n"
-      	sudo dpkg --add-architecture i386
-      	sudo apt-get -qq update
-	sudo apt-get install wine
-	echo -e $GREEN " Start the install.sh File  Again"
-	exit 0
-fi
-
-
-if [  -e /usr/bin/x86_64-w64-mingw32-gcc ]; then
-    echo -e $GREEN "[ ✔ ] Mingw-w64 Compiler.......[ found ]"
-else 
-	echo "deb http://http.kali.org/kali kali-rolling main non-free contrib
-deb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list
-	echo -e $RED "[ X ] Mingw-w64 -> not found "
-	#sudo apt-get install mingw-w64 mingw32 -y
-	sudo apt-get install mingw-w64 mingw32 --force-yes -y
-	echo -e $GREEN " Start the install.sh File  Again"
-	exit 0
+	printf "\n[*]Adding x86 architecture to x86_64 system for Wine.\n"
+    sudo dpkg --add-architecture i386 || exit 1
+	sudo apt-get install -y wine
 	
+	printf "Restart install.sh.\n"
+	exit 1
 fi
 
-echo "";
-    echo "[✔] Dependencies installed successfully! [✔]";
-    echo "";
-    echo "[✔]==========================================================================[✔]";
-    echo "[✔]      All is done!! You can execute by typing \"python HackTheWorld.py\"    [✔]";
-    echo "[✔]==========================================================================[✔]";
-    echo "";
+if [ -e /usr/bin/x86_64-w64-mingw32-gcc ]; then
+    printf "[] Mingw-w64 Compiler is already installed.\n"
+elif [ "$arch" = "Kali" ]; then
+	for package in mingw-w64 mingw32; do
+		sudo apt-get install -y $package
+	done
+else
+	printf "[!] Compilation requires Mingw-w64.\n"
+	printf "[!] Suggest using Kali Linux. Otherwise, you will need the mingw-w64 package.\n"
+	printf "[!] You may also need mingw32 depending on the age of your distro.\n"
+	printf "[*] Re-run install.sh when this is resolved.\n"
+	exit 1
+fi
+
+printf "\nDependencies are installed successfully.\n"
+printf "You can now execute by typing: \"python HackTheWorld.py\"\n"
 
 exit 0
-
