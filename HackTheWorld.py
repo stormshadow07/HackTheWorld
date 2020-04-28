@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
+import os
 import random
 import string
-import argparse
-from Crypto.Hash import MD5
-import os
-from termcolor import colored
+import hashlib
 
 
 def banner():
@@ -138,7 +136,7 @@ if __name__ == "__main__":
 		print(color(f"[!] Could not open or read file [{shellcode_output}]"))
 		raise SystemExit(e)
 
-	print(color(f"[*] MD5 hash of the initial shellcode: [{MD5.new(shellcode_bytes).hexdigest()}]"))
+	print(color(f"[*] MD5 hash of the initial shellcode: [{hashlib.MD5(shellcode_bytes).hexdigest()}]"))
 	print(color(f"[*] Shellcode size: [{len(shellcode_bytes)}] bytes"))
 
 	master_key = input(color(" [?] Enter the Key to Encrypt Shellcode with : "))
