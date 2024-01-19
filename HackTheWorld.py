@@ -14,7 +14,7 @@
 import random 
 import string
 import argparse
-from pycryptodome.Hash import MD5
+from Cryptodome.Hash import SHA256
 import os
 from termcolor import colored
 shellcodeFile='./result/test.raw'
@@ -37,14 +37,14 @@ def rand():
 
 def xor(data, key):
 	l = len(key)
-	keyAsInt = map(ord, key)
+	keyAsInt = list(map(ord, key))
 	return bytes(bytearray((
-	    (data[i] ^ keyAsInt[i % l]) for i in range(0,len(data))
+	    (data[i] ^ keyAsInt[i % l]) for i in range(0, len(data))
 	)))
 
 def writetofile(data, key, cipherType,lport):
 	shellcode = "\\x"
-	shellcode += "\\x".join(format(ord(b),'02x') for b in data)
+	shellcode += "\\x".join(format(b, '02x') for b in data)
 	#print shellcode
 	global Filename
 	list1=[1,2,3,4,5,6,7,8,9,10]
@@ -135,7 +135,7 @@ if __name__ == '__main__':
 	
 
 	try:
-		with open(shellcodeFile) as shellcodeFileHandle:
+		with open(shellcodeFile, 'rb') as shellcodeFileHandle:
 			shellcodeBytes = bytearray(shellcodeFileHandle.read())
 			shellcodeFileHandle.close()
 			print (color("[*] Shellcode file [{}] successfully loaded".format(shellcodeFile)))
@@ -143,7 +143,7 @@ if __name__ == '__main__':
 		print (color("[!] Could not open or read file [{}]".format(shellcodeFile)))
 		quit()
 
-	print (color("[*] MD5 hash of the initial shellcode: [{}]".format(MD5.new(shellcodeBytes).hexdigest())))
+	print (color("[*] SHA256 hash of the initial shellcode: [{}]".format(SHA256.new(shellcodeBytes).hexdigest())))
 	print (color("[*] Shellcode size: [{}] bytes".format(len(shellcodeBytes))))
 	masterKey = input(color(' [?] Enter the Key to Encrypt Shellcode with : '))
 	print (color("[+] XOR Encrypting the shellcode with key [{}]".format(masterKey)))
